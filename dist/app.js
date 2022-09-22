@@ -1,12 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initApp = void 0;
+// heroku logs -t --app parus-smart-bot
 // https://parus-smart-bot.herokuapp.com/
 // https://partners.viber.com/
 // https://developers.viber.com/docs/api/rest-bot-api/#send-message
 function initApp(app) {
     app.post("/webhook", (request, response) => {
-        console.log("received from viber something", request, response);
+        console.log("received from viber something", request.body);
         // start insert code
         // if (req.body.sdfsdf === "") {
         //   sendMessageToViber({

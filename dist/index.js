@@ -86,10 +86,6 @@ app.post(EApis.webhook, (req, res) => {
     const sendProxyRequests = true;
     if (sendProxyRequests) {
         try {
-            axios_1.default.post("http://178.210.131.101:3005/webhook", body, (0, common_1.getAxiosConfig)());
-        }
-        catch (ex) { }
-        try {
             axios_1.default.post("http://178.210.131.101:3006/webhook", body, (0, common_1.getAxiosConfig)());
         }
         catch (ex) { }
