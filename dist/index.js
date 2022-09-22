@@ -83,7 +83,7 @@ let dataArray = [];
 app.post(EApis.webhook, (req, res) => {
     const body = req.body;
     console.log("webhook", body);
-    const sendProxyRequests = true;
+    const sendProxyRequests = false;
     if (sendProxyRequests) {
         try {
             axios_1.default.post("http://178.210.131.101:3005/", body);
