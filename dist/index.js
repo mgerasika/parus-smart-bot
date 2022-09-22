@@ -18,7 +18,7 @@ const app_1 = require("./app");
 const common_1 = require("./common");
 const app = (0, express_1.default)();
 const port = process.env.PORT || 3005;
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === "development") {
     (0, app_1.initApp)(app);
 }
 var EApis;
@@ -29,7 +29,7 @@ var EApis;
     EApis["clear"] = "/clear";
 })(EApis || (EApis = {}));
 app.get("/", (req, res) => {
-    res.send(Object.values(EApis).join(', '));
+    res.send(Object.values(EApis).join(", "));
 });
 app.get(EApis.setup, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -72,16 +72,19 @@ app.get(EApis.unSetup, (req, res) => __awaiter(void 0, void 0, void 0, function*
 let dataArray = [];
 app.post(EApis.webhook, (req, res) => {
     console.log("webhook", req.body);
-    try {
-        axios_1.default.post("http://178.210.131.101:3005/", req.body);
+    const sendProxyRequests = false;
+    if (sendProxyRequests) {
+        try {
+            axios_1.default.post("http://178.210.131.101:3005/", req.body);
+        }
+        catch (ex) { }
+        try {
+            axios_1.default.post("http://178.210.131.101:3006/", req.body);
+        }
+        catch (ex) { }
     }
-    catch (ex) { }
-    try {
-        axios_1.default.post("http://178.210.131.101:3006/", req.body);
-    }
-    catch (ex) { }
     dataArray.push(req.body);
-    res.send("received" + req.body);
+    res.send("received");
 });
 app.get(EApis.webhook, (req, res) => {
     res.send(JSON.stringify(dataArray, null, 2));

@@ -6,8 +6,8 @@ import { getAxiosConfig } from "./common";
 const app = express();
 const port = process.env.PORT || 3005;
 
-if (process.env.NODE_ENV === 'development') {
-	initApp(app);
+if (process.env.NODE_ENV === "development") {
+  initApp(app);
 }
 
 enum EApis {
@@ -17,7 +17,7 @@ enum EApis {
   clear = "/clear",
 }
 app.get("/", (req, res) => {
-  res.send(Object.values(EApis).join(', '));
+  res.send(Object.values(EApis).join(", "));
 });
 
 app.get(EApis.setup, async (req, res) => {
@@ -69,14 +69,17 @@ app.get(EApis.unSetup, async (req, res) => {
 let dataArray: any[] = [];
 app.post(EApis.webhook, (req, res) => {
   console.log("webhook", req.body);
-  try {
-    axios.post("http://178.210.131.101:3005/", req.body);
-  } catch (ex) {}
-  try {
-    axios.post("http://178.210.131.101:3006/", req.body);
-  } catch (ex) {}
+  const sendProxyRequests = false;
+  if (sendProxyRequests) {
+    try {
+      axios.post("http://178.210.131.101:3005/", req.body);
+    } catch (ex) {}
+    try {
+      axios.post("http://178.210.131.101:3006/", req.body);
+    } catch (ex) {}
+  }
   dataArray.push(req.body);
-  res.send("received" + req.body);
+  res.send("received");
 });
 
 app.get(EApis.webhook, (req, res) => {
