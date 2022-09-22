@@ -15,7 +15,9 @@ app.get("/setup", async (req, res) => {
       "https://chatapi.viber.com/pa/set_webhook",
       {
         // url: "http://mger.site/webhook",
-        url: "https://95e2-178-210-131-101.eu.ngrok.io/webhook",
+        // url: "https://95e2-178-210-131-101.eu.ngrok.io/webhook",
+        //setup response {"status":0,"status_message":"ok","chat_hostname":"SN-CHAT-04_","event_types":["subscribed","unsubscribed","conversation_started","delivered","failed","message","seen"]}
+        url: "https://parus-smart-bot.herokuapp.com/webhook",
         event_types: [
           "delivered",
           "seen",
@@ -63,13 +65,20 @@ app.get("/unsetup", async (req, res) => {
   }
 });
 
+let dataArray: any[] = [];
 app.post("/webhook", (req, res) => {
   console.log("webhook", req.body);
+  dataArray.push(req.body);
   res.send("recieved" + req.body);
 });
 
 app.get("/webhook", (req, res) => {
-  res.send("webhook get");
+  res.send(JSON.stringify(dataArray, null, 2));
+});
+
+app.get("/clear", (req, res) => {
+  dataArray = [];
+  res.send(JSON.stringify(dataArray, null, 2));
 });
 
 app.listen(port, () => {

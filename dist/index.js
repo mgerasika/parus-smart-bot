@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const express_1 = __importDefault(require("express"));
 const app = (0, express_1.default)();
-const port = 3005;
+const port = process.env.PORT || 3005;
 // https://partners.viber.com/
 app.get("/", (req, res) => {
     res.send("Hello World22!");
@@ -24,7 +24,9 @@ app.get("/setup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield axios_1.default.post("https://chatapi.viber.com/pa/set_webhook", {
             // url: "http://mger.site/webhook",
-            url: "https://95e2-178-210-131-101.eu.ngrok.io/webhook",
+            // url: "https://95e2-178-210-131-101.eu.ngrok.io/webhook",
+            //setup response {"status":0,"status_message":"ok","chat_hostname":"SN-CHAT-04_","event_types":["subscribed","unsubscribed","conversation_started","delivered","failed","message","seen"]}
+            url: "https://parus-smart-bot.herokuapp.com/webhook",
             event_types: [
                 "delivered",
                 "seen",
@@ -64,12 +66,18 @@ app.get("/unsetup", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.send("error" + JSON.stringify(error));
     }
 }));
+let dataArray = [];
 app.post("/webhook", (req, res) => {
     console.log("webhook", req.body);
+    dataArray.push(req.body);
     res.send("recieved" + req.body);
 });
 app.get("/webhook", (req, res) => {
-    res.send("webhook get");
+    res.send(JSON.stringify(dataArray, null, 2));
+});
+app.get("/clear", (req, res) => {
+    dataArray = [];
+    res.send(JSON.stringify(dataArray, null, 2));
 });
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
