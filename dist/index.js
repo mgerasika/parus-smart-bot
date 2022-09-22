@@ -28,15 +28,24 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded());
 console.log(app.get("env"));
 // app.use(express.multipart());
-if (app.get("env") === "development") {
-    (0, app_1.initApp)(app);
-}
-else {
-    app.post(common_1.EApis.webhook, (req, res) => {
-        const body = req.body;
+app.get("/", (req, res) => {
+    res.send(Object.values(common_1.EApis).join(", "));
+});
+app.post(common_1.EApis.webhook, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const body = req.body;
+    if (app.get("env") === "development") {
+        try {
+            yield (0, app_1.processRequest)(req, res);
+            res.status(200).send();
+        }
+        catch (error) {
+            res.status(400).send(error);
+        }
+    }
+    else {
         //Warning!!! when setup set to false
-        const SEND_TO_PROXY = true;
-        if (SEND_TO_PROXY) {
+        const DEBUG_VERSION = true;
+        if (DEBUG_VERSION) {
             try {
                 axios_1.default.post("http://178.210.131.101:3005/webhook", body, (0, common_1.getAxiosConfig)());
                 res.status(200).send();
@@ -47,20 +56,19 @@ else {
             }
         }
         else {
-            res.status(200).send();
+            try {
+                yield (0, app_1.processRequest)(req, res);
+                res.status(200).send();
+            }
+            catch (error) {
+                res.status(400).send(error);
+            }
         }
-    });
-}
-app.get("/", (req, res) => {
-    res.send(Object.values(common_1.EApis).join(", "));
-});
-// setup response :["subscribed","unsubscribed","conversation_started","delivered","failed","message","seen"]}
+    }
+}));
 app.get(common_1.EApis.setup, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield axios_1.default.post("https://chatapi.viber.com/pa/set_webhook", {
-            // url: "http://mger.site/webhook",
-            // url: "https://95e2-178-210-131-101.eu.ngrok.io/webhook",
-            //setup response {"status":0,"status_message":"ok","chat_hostname":"SN-CHAT-04_","event_types":["subscribed","unsubscribed","conversation_started","delivered","failed","message","seen"]}
             url: "https://parus-smart-bot.herokuapp.com/webhook",
             event_types: [
                 //   "delivered",

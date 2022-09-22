@@ -12,40 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAxiosConfig = exports.sendMessage = exports.sendPictureMessageToViber = exports.sendTextMessageToViber = exports.EMessageType = exports.EEventTypes = exports.EApis = void 0;
+exports.getAxiosConfig = exports.sendMessage = exports.sendPictureMessageToViber = exports.sendTextMessageToViber = exports.EApis = void 0;
 const axios_1 = __importDefault(require("axios"));
+const message_type_enum_1 = require("./enums/message-type.enum");
 var EApis;
 (function (EApis) {
     EApis["setup"] = "/setup";
     EApis["unSetup"] = "/unsetup";
     EApis["webhook"] = "/webhook";
 })(EApis = exports.EApis || (exports.EApis = {}));
-var EEventTypes;
-(function (EEventTypes) {
-    EEventTypes["delivered"] = "delivered";
-    EEventTypes["seen"] = "seen";
-    EEventTypes["failed"] = "failed";
-    EEventTypes["subscribed"] = "subscribed";
-    EEventTypes["unsubscribed"] = "unsubscribed";
-    EEventTypes["message"] = "message";
-    EEventTypes["conversation_started"] = "conversation_started";
-})(EEventTypes = exports.EEventTypes || (exports.EEventTypes = {}));
-var EMessageType;
-(function (EMessageType) {
-    EMessageType["text"] = "text";
-    EMessageType["picture"] = "picture";
-    EMessageType["video"] = "video";
-    EMessageType["file"] = "file";
-    EMessageType["location"] = "location";
-    EMessageType["contact"] = "contact";
-    EMessageType["sticker"] = "sticker";
-    EMessageType["carousel"] = "carousel";
-    EMessageType["content"] = "content";
-    EMessageType["url"] = "url";
-})(EMessageType = exports.EMessageType || (exports.EMessageType = {}));
 function sendTextMessageToViber(message) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield sendMessage(Object.assign(Object.assign({}, message), { min_api_version: 7, type: EMessageType.text, keyboard: {
+        return yield sendMessage(Object.assign(Object.assign({}, message), { min_api_version: 7, type: message_type_enum_1.EMessageType.text, keyboard: {
                 Type: "keyboard",
                 DefaultHeight: false,
                 Buttons: [
@@ -68,7 +46,7 @@ function sendTextMessageToViber(message) {
 exports.sendTextMessageToViber = sendTextMessageToViber;
 function sendPictureMessageToViber(message) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield sendMessage(Object.assign(Object.assign({}, message), { type: EMessageType.picture, sender: {
+        return yield sendMessage(Object.assign(Object.assign({}, message), { type: message_type_enum_1.EMessageType.picture, sender: {
                 name: "John McClane",
                 avatar: "http://avatar.example.com",
             } }));

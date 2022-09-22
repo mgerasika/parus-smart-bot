@@ -1,66 +1,10 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { EMessageType } from "./enums/message-type.enum";
 
 export enum EApis {
   setup = "/setup",
   unSetup = "/unsetup",
   webhook = "/webhook",
-}
-
-export enum EEventTypes {
-  delivered = "delivered",
-  seen = "seen",
-  failed = "failed",
-  subscribed = "subscribed",
-  unsubscribed = "unsubscribed",
-  message = "message",
-  conversation_started = "conversation_started",
-}
-
-export enum EMessageType {
-  text = "text",
-  picture = "picture",
-  video = "video",
-  file = "file",
-  location = "location",
-  contact = "contact",
-  sticker = "sticker",
-  carousel = "carousel",
-  content = "content",
-  url = "url",
-}
-
-export interface IMessage {
-  event: EEventTypes;
-  timestamp: number;
-  chat_hostname: string;
-  message_token: number;
-  sender: {
-    id: string;
-    name: string;
-    avatar: string;
-    language: string;
-    country: string;
-    api_version: number;
-  };
-  message: { text: string; type: string };
-  silent: boolean;
-}
-
-export interface IConversationStartedMessage {
-  event: EEventTypes;
-  timestamp: number;
-  chat_hostname: string;
-  message_token: number;
-  type: string;
-  user: {
-    id: string;
-    name: string;
-    avatar: string;
-    language: string;
-    country: string;
-    api_version: number;
-  };
-  subscribed: boolean;
 }
 
 export async function sendTextMessageToViber(message: {
