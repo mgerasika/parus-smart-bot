@@ -51,13 +51,13 @@ function sendTextMessageToViber(message) {
                 Buttons: [
                     {
                         ActionType: "reply",
-                        ActionBody: "reply to me 1",
+                        ActionBody: "reply1",
                         Text: "Так давай",
                         TextSize: "regular",
                     },
                     {
                         ActionType: "reply",
-                        ActionBody: "reply to me 2",
+                        ActionBody: "reply2",
                         Text: "Ні я тебе більше не хочу Піди купи капусту краще",
                         TextSize: "regular",
                     },
@@ -78,12 +78,11 @@ exports.sendPictureMessageToViber = sendPictureMessageToViber;
 function sendMessage(message) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            console.log("send = ", message);
             const data = yield axios_1.default.post("https://chatapi.viber.com/pa/send_message", message, getAxiosConfig());
             return { data };
         }
         catch (error) {
-            console.log("error", error);
+            console.log("error ", JSON.stringify(error));
             return { error };
         }
     });

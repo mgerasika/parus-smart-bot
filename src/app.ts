@@ -19,8 +19,10 @@ export function initApp(app: any) {
     if (request.body.event === EEventTypes.delivered) {
       // do nothing
     }
-    if (request.body.event === EEventTypes.message) {
+    if (request.body.event === EEventTypes.message ) {
       const body = request.body as IMessage;
+      if (body.sender.id !== '') {
+      }
       await sendMessage({
         receiver: body.sender.id,
         type: "rich_media",
@@ -69,6 +71,46 @@ export function initApp(app: any) {
               TextVAlign: "middle",
               TextHAlign: "middle",
             },
+
+            {
+              Columns: 6,
+              Rows: 3,
+              ActionType: "open-url",
+              ActionBody: "https://www.google.com",
+              Image: "https://s16.postimg.org/wi8jx20wl/image_RMsmall2.png",
+            },
+            {
+              Columns: 6,
+              Rows: 2,
+              Text: "<font color=#323232><b>Hanes Men's Humor Graphic T-Shirt</b></font><font color=#777777><br>Hanes</font><font color=#6fc133>$10.99</font>",
+              ActionType: "open-url",
+              ActionBody: "https://www.google.com",
+              TextSize: "medium",
+              TextVAlign: "middle",
+              TextHAlign: "left",
+            },
+            {
+              Columns: 6,
+              Rows: 1,
+              ActionType: "reply",
+              ActionBody: "https://www.google.com",
+              Text: "<font color=#ffffff>Buy</font>",
+              TextSize: "large",
+              TextVAlign: "middle",
+              TextHAlign: "middle",
+              Image: "https://s14.postimg.org/4mmt4rw1t/Button.png",
+            },
+            {
+              Columns: 6,
+              Rows: 1,
+              ActionType: "reply",
+              ActionBody: "https://www.google.com",
+              Text: "<font color=#8367db>MORE DETAILS</font>",
+              TextSize: "small",
+              TextVAlign: "middle",
+              TextHAlign: "middle",
+            },
+
             {
               Columns: 6,
               Rows: 3,
@@ -114,7 +156,7 @@ export function initApp(app: any) {
     if (request.body.event === EEventTypes.conversation_started) {
       const body = request.body as IConversationStartedMessage;
       sendTextMessageToViber({
-		  receiver: body.user.id,
+        receiver: body.user.id,
         text: "Привіт Юля. Я твій віртуальний коханець. Давай дружити 222",
         sender: {
           name: body.user.name,

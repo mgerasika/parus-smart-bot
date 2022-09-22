@@ -23,7 +23,7 @@ if (app.get("env") === "development") {
 } else {
   app.post(EApis.webhook, (req, res) => {
     const body = req.body;
-    const sendProxyRequests = true;
+    const sendProxyRequests = false;
     if (sendProxyRequests) {
       try {
         axios.post(
@@ -54,8 +54,8 @@ app.get(EApis.setup, async (req, res) => {
         //setup response {"status":0,"status_message":"ok","chat_hostname":"SN-CHAT-04_","event_types":["subscribed","unsubscribed","conversation_started","delivered","failed","message","seen"]}
         url: "https://parus-smart-bot.herokuapp.com/webhook",
         event_types: [
-          "delivered",
-          "seen",
+          //   "delivered",
+          //   "seen",
           "failed",
           "subscribed",
           "unsubscribed",

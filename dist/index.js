@@ -34,7 +34,7 @@ if (app.get("env") === "development") {
 else {
     app.post(common_1.EApis.webhook, (req, res) => {
         const body = req.body;
-        const sendProxyRequests = true;
+        const sendProxyRequests = false;
         if (sendProxyRequests) {
             try {
                 axios_1.default.post("http://178.210.131.101:3006/webhook", body, (0, common_1.getAxiosConfig)());
@@ -58,8 +58,8 @@ app.get(common_1.EApis.setup, (req, res) => __awaiter(void 0, void 0, void 0, fu
             //setup response {"status":0,"status_message":"ok","chat_hostname":"SN-CHAT-04_","event_types":["subscribed","unsubscribed","conversation_started","delivered","failed","message","seen"]}
             url: "https://parus-smart-bot.herokuapp.com/webhook",
             event_types: [
-                "delivered",
-                "seen",
+                //   "delivered",
+                //   "seen",
                 "failed",
                 "subscribed",
                 "unsubscribed",

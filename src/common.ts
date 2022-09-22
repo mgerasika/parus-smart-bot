@@ -81,13 +81,13 @@ export async function sendTextMessageToViber(message: {
       Buttons: [
         {
           ActionType: "reply",
-          ActionBody: "reply to me 1",
+          ActionBody: "reply1",
           Text: "Так давай",
           TextSize: "regular",
         },
         {
           ActionType: "reply",
-          ActionBody: "reply to me 2",
+          ActionBody: "reply2",
           Text: "Ні я тебе більше не хочу Піди купи капусту краще",
           TextSize: "regular",
         },
@@ -116,7 +116,6 @@ export async function sendMessage(
   message: any
 ): Promise<{ data?: any; error?: any }> {
   try {
-    console.log("send = ", message);
     const data = await axios.post(
       "https://chatapi.viber.com/pa/send_message",
       message,
@@ -124,7 +123,7 @@ export async function sendMessage(
     );
     return { data };
   } catch (error) {
-    console.log("error", error);
+    console.log("error ", JSON.stringify(error));
     return { error };
   }
 }
