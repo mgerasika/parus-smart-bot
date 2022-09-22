@@ -18,7 +18,9 @@ const app_1 = require("./app");
 const common_1 = require("./common");
 const app = (0, express_1.default)();
 const port = process.env.PORT || 3005;
-(0, app_1.initApp)(app);
+if (process.env.NODE_ENV === 'development') {
+    (0, app_1.initApp)(app);
+}
 var EApis;
 (function (EApis) {
     EApis["setup"] = "/setup";

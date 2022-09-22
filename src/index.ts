@@ -6,7 +6,9 @@ import { getAxiosConfig } from "./common";
 const app = express();
 const port = process.env.PORT || 3005;
 
-initApp(app);
+if (process.env.NODE_ENV === 'development') {
+	initApp(app);
+}
 
 enum EApis {
   setup = "/setup",

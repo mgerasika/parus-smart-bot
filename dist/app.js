@@ -6,7 +6,7 @@ exports.initApp = void 0;
 // https://developers.viber.com/docs/api/rest-bot-api/#send-message
 function initApp(app) {
     app.post("/webhook", (request, response) => {
-        console.log("received from viber something", request.body);
+        console.log("received from viber something", request, response);
         // start insert code
         // if (req.body.sdfsdf === "") {
         //   sendMessageToViber({
