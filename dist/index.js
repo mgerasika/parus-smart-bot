@@ -35,15 +35,19 @@ else {
     app.post(common_1.EApis.webhook, (req, res) => {
         const body = req.body;
         // when setup set to false
-        const SEND_TO_PROXY = true;
+        const SEND_TO_PROXY = false;
         if (SEND_TO_PROXY) {
             try {
                 axios_1.default.post("http://178.210.131.101:3006/webhook", body, (0, common_1.getAxiosConfig)());
+                res.status(200).send();
             }
             catch (error) {
                 console.log("error = ", error);
                 res.status(400).send(error);
             }
+        }
+        else {
+            res.status(200).send();
         }
     });
 }

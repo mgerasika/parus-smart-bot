@@ -37,6 +37,8 @@ if (app.get("env") === "development") {
         console.log("error = ", error);
         res.status(400).send(error);
       }
+    } else {
+      res.status(200).send();
     }
   });
 }
