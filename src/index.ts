@@ -23,14 +23,16 @@ if (app.get("env") === "development") {
 } else {
   app.post(EApis.webhook, (req, res) => {
     const body = req.body;
-    const sendProxyRequests = false;
-    if (sendProxyRequests) {
+    // when setup set to false
+    const SEND_TO_PROXY = false;
+    if (SEND_TO_PROXY) {
       try {
         axios.post(
           "http://178.210.131.101:3006/webhook",
           body,
           getAxiosConfig()
         );
+        res.status(200).send();
       } catch (error) {
         console.log("error = ", error);
         res.status(400).send(error);
