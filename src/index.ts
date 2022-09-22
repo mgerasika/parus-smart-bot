@@ -28,7 +28,7 @@ if (app.get("env") === "development") {
     if (SEND_TO_PROXY) {
       try {
         axios.post(
-          "http://178.210.131.101:3006/webhook",
+          "http://178.210.131.101:3005/webhook",
           body,
           getAxiosConfig()
         );
