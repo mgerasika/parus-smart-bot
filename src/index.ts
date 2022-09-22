@@ -15,7 +15,7 @@ enum EApis {
   clear = "/clear",
 }
 app.get("/", (req, res) => {
-  res.send("");
+  res.send(Object.values(EApis).join(', '));
 });
 
 app.get(EApis.setup, async (req, res) => {

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initApp = void 0;
 // https://partners.viber.com/
+// https://developers.viber.com/docs/api/rest-bot-api/#send-message
 function initApp(app) {
     app.post("/webhook", (request, response) => {
         console.log("received from viber something", request.body);

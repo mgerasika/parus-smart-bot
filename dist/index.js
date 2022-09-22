@@ -27,7 +27,7 @@ var EApis;
     EApis["clear"] = "/clear";
 })(EApis || (EApis = {}));
 app.get("/", (req, res) => {
-    res.send("");
+    res.send(Object.values(EApis).join(', '));
 });
 app.get(EApis.setup, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
