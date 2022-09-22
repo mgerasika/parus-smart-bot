@@ -14,22 +14,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const express_1 = __importDefault(require("express"));
-const app_1 = require("./app");
-const common_1 = require("./common");
 const app = (0, express_1.default)();
 const port = process.env.PORT || 3005;
-(0, app_1.initApp)(app);
-var EApis;
-(function (EApis) {
-    EApis["setup"] = "/setup";
-    EApis["unSetup"] = "/unsetup";
-    EApis["webhook"] = "/webhook";
-    EApis["clear"] = "/clear";
-})(EApis || (EApis = {}));
+// https://partners.viber.com/
 app.get("/", (req, res) => {
-    res.send("");
+    res.send("Hello World22!");
 });
-app.get(EApis.setup, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get("/setup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield axios_1.default.post("https://chatapi.viber.com/pa/set_webhook", {
             // url: "http://mger.site/webhook",
@@ -47,7 +38,11 @@ app.get(EApis.setup, (req, res) => __awaiter(void 0, void 0, void 0, function* (
             ],
             send_name: true,
             send_photo: true,
-        }, (0, common_1.getAxiosConfig)());
+        }, {
+            headers: {
+                "X-Viber-Auth-Token": "4fd8dc41e8a7e2bf-37458628c34b9ba8-9fece30a816063ce",
+            },
+        });
         console.log(data.data);
         res.send("setup response " + JSON.stringify(data.data));
     }
@@ -55,11 +50,15 @@ app.get(EApis.setup, (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.send("error" + JSON.stringify(error));
     }
 }));
-app.get(EApis.unSetup, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get("/unsetup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield axios_1.default.post("https://chatapi.viber.com/pa/set_webhook", {
             url: "",
-        }, (0, common_1.getAxiosConfig)());
+        }, {
+            headers: {
+                "X-Viber-Auth-Token": "4fd8dc41e8a7e2bf-37458628c34b9ba8-9fece30a816063ce",
+            },
+        });
         console.log(data.data);
         res.send("unsetup response " + JSON.stringify(data.data));
     }
@@ -68,27 +67,42 @@ app.get(EApis.unSetup, (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 }));
 let dataArray = [];
-app.post(EApis.webhook, (req, res) => {
+app.post("/webhook", (req, res) => {
     console.log("webhook", req.body);
-    try {
-        axios_1.default.post("http://178.210.131.101:3005/", req.body);
-    }
-    catch (ex) { }
-    try {
-        axios_1.default.post("http://178.210.131.101:3006/", req.body);
-    }
-    catch (ex) { }
     dataArray.push(req.body);
-    res.send("received" + req.body);
+    res.send("recieved" + req.body);
 });
-app.get(EApis.webhook, (req, res) => {
+app.get("/webhook", (req, res) => {
     res.send(JSON.stringify(dataArray, null, 2));
 });
-app.get(EApis.clear, (req, res) => {
+app.get("/clear", (req, res) => {
     dataArray = [];
     res.send(JSON.stringify(dataArray, null, 2));
 });
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });
-//# sourceMappingURL=index.js.map
+// if(vier.event === 'conversation_started')
+const data = {
+    receiver: "viber.user.id",
+    type: "text",
+    text: "hello world",
+};
+function send(message) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const data = yield axios_1.default.post("https://chatapi.viber.com/pa/send_message", {
+                url: "",
+            }, {
+                headers: {
+                    "X-Viber-Auth-Token": "4fd8dc41e8a7e2bf-37458628c34b9ba8-9fece30a816063ce",
+                },
+            });
+            return { data };
+        }
+        catch (error) {
+            return { error };
+        }
+    });
+}
+//# sourceMappingURL=index%20copy.js.map

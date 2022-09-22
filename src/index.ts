@@ -1,15 +1,24 @@
 import axios from "axios";
 import express from "express";
-import { setOriginalNode } from "typescript";
+import { Express } from "express-serve-static-core";
+import { initApp } from "./app";
+import { getAxiosConfig } from "./common";
 const app = express();
 const port = process.env.PORT || 3005;
 
-// https://partners.viber.com/
+initApp(app);
+
+enum EApis {
+  setup = "/setup",
+  unSetup = "/unsetup",
+  webhook = "/webhook",
+  clear = "/clear",
+}
 app.get("/", (req, res) => {
-  res.send("Hello World22!");
+  res.send("");
 });
 
-app.get("/setup", async (req, res) => {
+app.get(EApis.setup, async (req, res) => {
   try {
     const data = await axios.post(
       "https://chatapi.viber.com/pa/set_webhook",
@@ -30,12 +39,7 @@ app.get("/setup", async (req, res) => {
         send_name: true,
         send_photo: true,
       },
-      {
-        headers: {
-          "X-Viber-Auth-Token":
-            "4fd8dc41e8a7e2bf-37458628c34b9ba8-9fece30a816063ce",
-        },
-      }
+      getAxiosConfig()
     );
     console.log(data.data);
     res.send("setup response " + JSON.stringify(data.data));
@@ -44,19 +48,14 @@ app.get("/setup", async (req, res) => {
   }
 });
 
-app.get("/unsetup", async (req, res) => {
+app.get(EApis.unSetup, async (req, res) => {
   try {
     const data = await axios.post(
       "https://chatapi.viber.com/pa/set_webhook",
       {
         url: "",
       },
-      {
-        headers: {
-          "X-Viber-Auth-Token":
-            "4fd8dc41e8a7e2bf-37458628c34b9ba8-9fece30a816063ce",
-        },
-      }
+      getAxiosConfig()
     );
     console.log(data.data);
     res.send("unsetup response " + JSON.stringify(data.data));
@@ -66,17 +65,23 @@ app.get("/unsetup", async (req, res) => {
 });
 
 let dataArray: any[] = [];
-app.post("/webhook", (req, res) => {
+app.post(EApis.webhook, (req, res) => {
   console.log("webhook", req.body);
+  try {
+    axios.post("http://178.210.131.101:3005/", req.body);
+  } catch (ex) {}
+  try {
+    axios.post("http://178.210.131.101:3006/", req.body);
+  } catch (ex) {}
   dataArray.push(req.body);
-  res.send("recieved" + req.body);
+  res.send("received" + req.body);
 });
 
-app.get("/webhook", (req, res) => {
+app.get(EApis.webhook, (req, res) => {
   res.send(JSON.stringify(dataArray, null, 2));
 });
 
-app.get("/clear", (req, res) => {
+app.get(EApis.clear, (req, res) => {
   dataArray = [];
   res.send(JSON.stringify(dataArray, null, 2));
 });
@@ -84,28 +89,3 @@ app.get("/clear", (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
-// if(vier.event === 'conversation_started')
-const data = {
-  receiver: "viber.user.id",
-  type: "text",
-  text: "hello world",
-};
-async function send(message: string): Promise<{ data?: any; error?: any }> {
-  try {
-    const data = await axios.post(
-      "https://chatapi.viber.com/pa/send_message",
-      {
-        url: "",
-      },
-      {
-        headers: {
-          "X-Viber-Auth-Token":
-            "4fd8dc41e8a7e2bf-37458628c34b9ba8-9fece30a816063ce",
-        },
-      }
-    );
-    return { data };
-  } catch (error) {
-    return { error };
-  }
-}
