@@ -19,7 +19,6 @@ var EApis;
     EApis["setup"] = "/setup";
     EApis["unSetup"] = "/unsetup";
     EApis["webhook"] = "/webhook";
-    EApis["clear"] = "/clear";
 })(EApis = exports.EApis || (exports.EApis = {}));
 var EEventTypes;
 (function (EEventTypes) {

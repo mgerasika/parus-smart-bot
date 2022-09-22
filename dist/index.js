@@ -26,27 +26,24 @@ app.use(body_parser_1.default.urlencoded({
 }));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded());
-console.log(app.get('env'));
+console.log(app.get("env"));
 // app.use(express.multipart());
-if (app.get('env') === "development") {
+if (app.get("env") === "development") {
     (0, app_1.initApp)(app);
 }
 else {
     app.post(common_1.EApis.webhook, (req, res) => {
         const body = req.body;
-        console.log("webhook production ", body);
         const sendProxyRequests = true;
         if (sendProxyRequests) {
             try {
                 axios_1.default.post("http://178.210.131.101:3006/webhook", body, (0, common_1.getAxiosConfig)());
             }
-            catch (ex) { }
+            catch (error) {
+                console.log("error = ", error);
+                res.status(400).send(error);
+            }
         }
-        dataArray.push(body);
-        res.send("received ");
-    });
-    app.get(common_1.EApis.webhook, (req, res) => {
-        res.send(JSON.stringify(dataArray, null, 2));
     });
 }
 app.get("/", (req, res) => {
@@ -73,10 +70,11 @@ app.get(common_1.EApis.setup, (req, res) => __awaiter(void 0, void 0, void 0, fu
             send_photo: true,
         }, (0, common_1.getAxiosConfig)());
         console.log(data.data);
-        res.send("setup response " + JSON.stringify(data.data));
+        res.status(200).send(data.data);
     }
     catch (error) {
-        res.send("error" + JSON.stringify(error));
+        console.log("error = ", error);
+        res.status(400).send(error);
     }
 }));
 app.get(common_1.EApis.unSetup, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -85,17 +83,13 @@ app.get(common_1.EApis.unSetup, (req, res) => __awaiter(void 0, void 0, void 0, 
             url: "",
         }, (0, common_1.getAxiosConfig)());
         console.log(data.data);
-        res.send("unsetup response " + JSON.stringify(data.data));
+        res.status(200).send(data.data);
     }
     catch (error) {
-        res.send("error" + JSON.stringify(error));
+        console.log("error = ", error);
+        res.status(400).send(error);
     }
 }));
-let dataArray = [];
-app.get(common_1.EApis.clear, (req, res) => {
-    dataArray = [];
-    res.send(JSON.stringify(dataArray, null, 2));
-});
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });

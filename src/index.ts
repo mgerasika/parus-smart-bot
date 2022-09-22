@@ -16,16 +16,13 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded());
-
-console.log(app.get('env'));
+console.log(app.get("env"));
 // app.use(express.multipart());
-if (app.get('env') === "development") {
+if (app.get("env") === "development") {
   initApp(app);
 } else {
   app.post(EApis.webhook, (req, res) => {
     const body = req.body;
-    console.log("webhook production ", body);
-
     const sendProxyRequests = true;
     if (sendProxyRequests) {
       try {
@@ -34,14 +31,11 @@ if (app.get('env') === "development") {
           body,
           getAxiosConfig()
         );
-      } catch (ex) {}
+      } catch (error) {
+        console.log("error = ", error);
+        res.status(400).send(error);
+      }
     }
-    dataArray.push(body);
-    res.send("received ");
-  });
-
-  app.get(EApis.webhook, (req, res) => {
-    res.send(JSON.stringify(dataArray, null, 2));
   });
 }
 
@@ -74,9 +68,10 @@ app.get(EApis.setup, async (req, res) => {
       getAxiosConfig()
     );
     console.log(data.data);
-    res.send("setup response " + JSON.stringify(data.data));
+    res.status(200).send(data.data);
   } catch (error) {
-    res.send("error" + JSON.stringify(error));
+    console.log("error = ", error);
+    res.status(400).send(error);
   }
 });
 
@@ -90,17 +85,11 @@ app.get(EApis.unSetup, async (req, res) => {
       getAxiosConfig()
     );
     console.log(data.data);
-    res.send("unsetup response " + JSON.stringify(data.data));
+    res.status(200).send(data.data);
   } catch (error) {
-    res.send("error" + JSON.stringify(error));
+    console.log("error = ", error);
+    res.status(400).send(error);
   }
-});
-
-let dataArray: any[] = [];
-
-app.get(EApis.clear, (req, res) => {
-  dataArray = [];
-  res.send(JSON.stringify(dataArray, null, 2));
 });
 
 app.listen(port, () => {
