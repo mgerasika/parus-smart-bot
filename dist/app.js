@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initApp = void 0;
+// https://parus-smart-bot.herokuapp.com/
 // https://partners.viber.com/
 // https://developers.viber.com/docs/api/rest-bot-api/#send-message
 function initApp(app) {

@@ -1,5 +1,6 @@
 import { sendMessageToViber } from "./common";
 
+// https://parus-smart-bot.herokuapp.com/
 // https://partners.viber.com/
 // https://developers.viber.com/docs/api/rest-bot-api/#send-message
 export function initApp(app: any) {
