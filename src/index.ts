@@ -2,11 +2,14 @@ import axios from "axios";
 import express from "express";
 import { Express } from "express-serve-static-core";
 import { processRequest } from "./app";
-import { EApis, getAxiosConfig } from "./common";
+import { EApis } from "./enums/api.enum";
 const app = express();
-const port = process.env.PORT || 3005;
-
 import bodyParser from "body-parser";
+import { setApp } from "./constants/app.constant";
+import { ENV } from "./constants/env.constant";
+import { getAxiosConfig } from "./utils/send-message-to-viber.util";
+import "module-alias/register";
+import { apiHooks } from "./api/hooks/index.hook";
 app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.use(
   bodyParser.urlencoded({
@@ -16,10 +19,24 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded());
-console.log(app.get("env"));
 // app.use(express.multipart());
 app.get("/", (req, res) => {
   res.send(Object.values(EApis).join(", "));
+});
+
+app.get("/article", async (req, res) => {
+  const { data } = await apiHooks.article.useGetArticlesAsync();
+  res.status(200).send(data);
+});
+
+app.get("/faq", async (req, res) => {
+  const { data } = await apiHooks.faq.useGetFaqsAsync();
+  res.status(200).send(data);
+});
+
+app.get("/page", async (req, res) => {
+  const { data } = await apiHooks.page.useGetPagesAsync();
+  res.status(200).send(data);
 });
 
 app.post(EApis.webhook, async (req, res) => {
@@ -37,7 +54,7 @@ app.post(EApis.webhook, async (req, res) => {
     if (DEBUG_VERSION) {
       try {
         axios.post(
-          "http://178.210.131.101:3005/webhook",
+          `${ENV.DEBUG_VIBER_SERVER_URL}webhook`,
           body,
           getAxiosConfig()
         );
@@ -62,7 +79,7 @@ app.get(EApis.setup, async (req, res) => {
     const data = await axios.post(
       "https://chatapi.viber.com/pa/set_webhook",
       {
-        url: "https://parus-smart-bot.herokuapp.com/webhook",
+        url: `${ENV.VIBER_PROXY_SERVER_URL}webhook`,
         event_types: [
           //   "delivered",
           //   "seen",
@@ -102,6 +119,9 @@ app.get(EApis.unSetup, async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+const PORT = process.env.PORT || 3005;
+console.log(app.get("env"));
+app.listen(PORT, () => {
+  setApp(app);
+  console.log(`Example app listening on port ${PORT}`);
 });

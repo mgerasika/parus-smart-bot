@@ -7,4 +7,4 @@ var EApis;
     EApis["unSetup"] = "/unsetup";
     EApis["webhook"] = "/webhook";
 })(EApis = exports.EApis || (exports.EApis = {}));
-//# sourceMappingURL=common.js.map
+//# sourceMappingURL=api.enum.js.map

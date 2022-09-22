@@ -15,10 +15,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const express_1 = __importDefault(require("express"));
 const app_1 = require("./app");
-const common_1 = require("./common");
+const api_enum_1 = require("./enums/api.enum");
 const app = (0, express_1.default)();
-const port = process.env.PORT || 3005;
 const body_parser_1 = __importDefault(require("body-parser"));
+const app_constant_1 = require("./constants/app.constant");
+const env_constant_1 = require("./constants/env.constant");
+const send_message_to_viber_util_1 = require("./utils/send-message-to-viber.util");
+require("module-alias/register");
+const index_hook_1 = require("./api/hooks/index.hook");
 app.use(body_parser_1.default.json()); // to support JSON-encoded bodies
 app.use(body_parser_1.default.urlencoded({
     // to support URL-encoded bodies
@@ -26,12 +30,23 @@ app.use(body_parser_1.default.urlencoded({
 }));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded());
-console.log(app.get("env"));
 // app.use(express.multipart());
 app.get("/", (req, res) => {
-    res.send(Object.values(common_1.EApis).join(", "));
+    res.send(Object.values(api_enum_1.EApis).join(", "));
 });
-app.post(common_1.EApis.webhook, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get("/article", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { data } = yield index_hook_1.apiHooks.article.useGetArticlesAsync();
+    res.status(200).send(data);
+}));
+app.get("/faq", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { data } = yield index_hook_1.apiHooks.faq.useGetFaqsAsync();
+    res.status(200).send(data);
+}));
+app.get("/page", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { data } = yield index_hook_1.apiHooks.page.useGetPagesAsync();
+    res.status(200).send(data);
+}));
+app.post(api_enum_1.EApis.webhook, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const body = req.body;
     if (app.get("env") === "development") {
         try {
@@ -47,7 +62,7 @@ app.post(common_1.EApis.webhook, (req, res) => __awaiter(void 0, void 0, void 0,
         const DEBUG_VERSION = true;
         if (DEBUG_VERSION) {
             try {
-                axios_1.default.post("http://178.210.131.101:3005/webhook", body, (0, common_1.getAxiosConfig)());
+                axios_1.default.post(`${env_constant_1.ENV.DEBUG_VIBER_SERVER_URL}webhook`, body, (0, send_message_to_viber_util_1.getAxiosConfig)());
                 res.status(200).send();
             }
             catch (error) {
@@ -66,10 +81,10 @@ app.post(common_1.EApis.webhook, (req, res) => __awaiter(void 0, void 0, void 0,
         }
     }
 }));
-app.get(common_1.EApis.setup, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get(api_enum_1.EApis.setup, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield axios_1.default.post("https://chatapi.viber.com/pa/set_webhook", {
-            url: "https://parus-smart-bot.herokuapp.com/webhook",
+            url: `${env_constant_1.ENV.VIBER_PROXY_SERVER_URL}webhook`,
             event_types: [
                 //   "delivered",
                 //   "seen",
@@ -81,7 +96,7 @@ app.get(common_1.EApis.setup, (req, res) => __awaiter(void 0, void 0, void 0, fu
             ],
             send_name: true,
             send_photo: true,
-        }, (0, common_1.getAxiosConfig)());
+        }, (0, send_message_to_viber_util_1.getAxiosConfig)());
         console.log(data.data);
         res.status(200).send(data.data);
     }
@@ -90,11 +105,11 @@ app.get(common_1.EApis.setup, (req, res) => __awaiter(void 0, void 0, void 0, fu
         res.status(400).send(error);
     }
 }));
-app.get(common_1.EApis.unSetup, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get(api_enum_1.EApis.unSetup, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield axios_1.default.post("https://chatapi.viber.com/pa/set_webhook", {
             url: "",
-        }, (0, common_1.getAxiosConfig)());
+        }, (0, send_message_to_viber_util_1.getAxiosConfig)());
         console.log(data.data);
         res.status(200).send(data.data);
     }
@@ -103,7 +118,10 @@ app.get(common_1.EApis.unSetup, (req, res) => __awaiter(void 0, void 0, void 0, 
         res.status(400).send(error);
     }
 }));
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
+const PORT = process.env.PORT || 3005;
+console.log(app.get("env"));
+app.listen(PORT, () => {
+    (0, app_constant_1.setApp)(app);
+    console.log(`Example app listening on port ${PORT}`);
 });
 //# sourceMappingURL=index.js.map

@@ -1,12 +1,12 @@
-import {
-  EApis,
-  sendMessage,
-  sendTextMessageToViber as sendTextMessageToViber,
-} from "./common";
+import { apiHooks } from "./api/hooks/index.hook";
 import { EEventType } from "./enums/event-type.enum";
 import { EMessageType } from "./enums/message-type.enum";
 import { IConversationStartedMessage } from "./interface/conversation-started-message.interface";
 import { IMessage } from "./interface/message.interface";
+import {
+  sendMessage,
+  sendTextMessageToViber,
+} from "./utils/send-message-to-viber.util";
 const { markdownToTxt } = require("markdown-to-txt");
 // heroku logs -t --app parus-smart-bot
 // https://parus-smart-bot.herokuapp.com/
@@ -17,6 +17,7 @@ export async function processRequest(request: any, response: any) {
 
   if (request.body.event === EEventType.message) {
     const body = request.body as IMessage;
+
     if (body.message.text === "2") {
       sendMessage({
         receiver: body.sender.id,

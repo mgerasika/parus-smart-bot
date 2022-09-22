@@ -1,11 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { EMessageType } from "./enums/message-type.enum";
-
-export enum EApis {
-  setup = "/setup",
-  unSetup = "/unsetup",
-  webhook = "/webhook",
-}
+import { ENV } from "../constants/env.constant";
+import { EMessageType } from "../enums/message-type.enum";
 
 export async function sendTextMessageToViber(message: {
   receiver: string;
@@ -75,8 +70,7 @@ export async function sendMessage(
 export function getAxiosConfig(): AxiosRequestConfig {
   return {
     headers: {
-      "X-Viber-Auth-Token":
-        "4fd8dc41e8a7e2bf-37458628c34b9ba8-9fece30a816063ce",
+      "X-Viber-Auth-Token": ENV.VIBER_PROXY_TOKEN,
     },
   };
 }
