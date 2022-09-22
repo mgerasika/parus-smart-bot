@@ -1,21 +1,22 @@
-import { sendMessageToViber } from "./common";
+import { EApis, sendTextMessageToViber as sendTextMessageToViber } from "./common";
 
 // heroku logs -t --app parus-smart-bot
 // https://parus-smart-bot.herokuapp.com/
 // https://partners.viber.com/
 // https://developers.viber.com/docs/api/rest-bot-api/#send-message
 export function initApp(app: any) {
-  app.post("/webhook", (request: any, response: any) => {
+  app.post(EApis.webhook, (request: any, response: any) => {
     console.log("received from viber something", request.body);
 
-    // start insert code
-    // if (req.body.sdfsdf === "") {
-    //   sendMessageToViber({
-    //     receiver: "viber.user.id",
-    //     type: "text",
-    //     text: "hello world",
-    //   });
-    // }
+    if (request.body.event === "delivered") {
+      // do nothing
+    }
+    if (request.body.event === "conversation_started") {
+      sendTextMessageToViber({
+        receiver: request.body.user.id,
+        text: "Привіт Юля. Я твій віртуальний коханець. Давай дружити",
+      });
+    }
   });
 }
 

@@ -26,22 +26,34 @@ app.use(body_parser_1.default.urlencoded({
 }));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded());
+console.log(app.get('env'));
 // app.use(express.multipart());
-if (process.env.NODE_ENV === "development") {
+if (app.get('env') === "development") {
     (0, app_1.initApp)(app);
 }
-var EApis;
-(function (EApis) {
-    EApis["setup"] = "/setup";
-    EApis["unSetup"] = "/unsetup";
-    EApis["webhook"] = "/webhook";
-    EApis["clear"] = "/clear";
-})(EApis || (EApis = {}));
+else {
+    app.post(common_1.EApis.webhook, (req, res) => {
+        const body = req.body;
+        console.log("webhook production ", body);
+        const sendProxyRequests = true;
+        if (sendProxyRequests) {
+            try {
+                axios_1.default.post("http://178.210.131.101:3006/webhook", body, (0, common_1.getAxiosConfig)());
+            }
+            catch (ex) { }
+        }
+        dataArray.push(body);
+        res.send("received ");
+    });
+    app.get(common_1.EApis.webhook, (req, res) => {
+        res.send(JSON.stringify(dataArray, null, 2));
+    });
+}
 app.get("/", (req, res) => {
-    res.send(Object.values(EApis).join(", "));
+    res.send(Object.values(common_1.EApis).join(", "));
 });
 // setup response :["subscribed","unsubscribed","conversation_started","delivered","failed","message","seen"]}
-app.get(EApis.setup, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get(common_1.EApis.setup, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield axios_1.default.post("https://chatapi.viber.com/pa/set_webhook", {
             // url: "http://mger.site/webhook",
@@ -67,7 +79,7 @@ app.get(EApis.setup, (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.send("error" + JSON.stringify(error));
     }
 }));
-app.get(EApis.unSetup, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get(common_1.EApis.unSetup, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield axios_1.default.post("https://chatapi.viber.com/pa/set_webhook", {
             url: "",
@@ -80,23 +92,7 @@ app.get(EApis.unSetup, (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 }));
 let dataArray = [];
-app.post(EApis.webhook, (req, res) => {
-    const body = req.body;
-    console.log("webhook", body);
-    const sendProxyRequests = true;
-    if (sendProxyRequests) {
-        try {
-            axios_1.default.post("http://178.210.131.101:3006/webhook", body, (0, common_1.getAxiosConfig)());
-        }
-        catch (ex) { }
-    }
-    dataArray.push(body);
-    res.send("received ");
-});
-app.get(EApis.webhook, (req, res) => {
-    res.send(JSON.stringify(dataArray, null, 2));
-});
-app.get(EApis.clear, (req, res) => {
+app.get(common_1.EApis.clear, (req, res) => {
     dataArray = [];
     res.send(JSON.stringify(dataArray, null, 2));
 });

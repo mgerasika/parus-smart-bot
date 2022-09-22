@@ -2,7 +2,7 @@ import axios from "axios";
 import express from "express";
 import { Express } from "express-serve-static-core";
 import { initApp } from "./app";
-import { getAxiosConfig } from "./common";
+import { EApis, getAxiosConfig } from "./common";
 const app = express();
 const port = process.env.PORT || 3005;
 
@@ -16,17 +16,35 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded());
+
+console.log(app.get('env'));
 // app.use(express.multipart());
-if (process.env.NODE_ENV === "development") {
+if (app.get('env') === "development") {
   initApp(app);
+} else {
+  app.post(EApis.webhook, (req, res) => {
+    const body = req.body;
+    console.log("webhook production ", body);
+
+    const sendProxyRequests = true;
+    if (sendProxyRequests) {
+      try {
+        axios.post(
+          "http://178.210.131.101:3006/webhook",
+          body,
+          getAxiosConfig()
+        );
+      } catch (ex) {}
+    }
+    dataArray.push(body);
+    res.send("received ");
+  });
+
+  app.get(EApis.webhook, (req, res) => {
+    res.send(JSON.stringify(dataArray, null, 2));
+  });
 }
 
-enum EApis {
-  setup = "/setup",
-  unSetup = "/unsetup",
-  webhook = "/webhook",
-  clear = "/clear",
-}
 app.get("/", (req, res) => {
   res.send(Object.values(EApis).join(", "));
 });
@@ -79,23 +97,6 @@ app.get(EApis.unSetup, async (req, res) => {
 });
 
 let dataArray: any[] = [];
-app.post(EApis.webhook, (req, res) => {
-  const body = req.body;
-  console.log("webhook", body);
-
-  const sendProxyRequests = true;
-  if (sendProxyRequests) {
-    try {
-      axios.post("http://178.210.131.101:3006/webhook", body, getAxiosConfig());
-    } catch (ex) {}
-  }
-  dataArray.push(body);
-  res.send("received ");
-});
-
-app.get(EApis.webhook, (req, res) => {
-  res.send(JSON.stringify(dataArray, null, 2));
-});
 
 app.get(EApis.clear, (req, res) => {
   dataArray = [];
