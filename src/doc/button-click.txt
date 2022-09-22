@@ -1,0 +1,16 @@
+received from viber something {
+  event: 'message',
+  timestamp: 1663849138369,
+  chat_hostname: 'SN-CALLBACK-01_',
+  message_token: 5753709998050956000,
+  sender: {
+    id: 'btwTg/rA4ytv5OxvoaTJwQ==',
+    name: 'Mykhaylo H',
+    avatar: 'https://media-direct.cdn.viber.com/download_photo?dlid=tFC_ir_ip-hB3NhPtzP785oRbT9oeAMQ_QFqPvJIeb3fVlXU6pJC3LOkFJ0NeSxjiU1P_RknWHcC5eS1L-W3GQonDKQNrrkQ7JqVrWnd3cpUFdq4fXRasH0CbZx45dIwI_MjLQ&fltp=jpg&imsz=0000',
+    language: 'en-GB',
+    country: 'UA',
+    api_version: 8
+  },
+  message: { text: 'reply to me', type: 'text' },
+  silent: false
+}

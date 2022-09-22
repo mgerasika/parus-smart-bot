@@ -59,7 +59,7 @@ function sendTextMessageToViber(message) {
                         {
                             ActionType: "reply",
                             ActionBody: "reply to me",
-                            Text: "Ні я тебе більше не хочу",
+                            Text: "Ні я тебе більше не хочу Піди купи капусту краще",
                             TextSize: "regular",
                         },
                     ],

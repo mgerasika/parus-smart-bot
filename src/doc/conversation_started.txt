@@ -14,3 +14,20 @@ webhook {
 2022-09-22T11:34:22.871593+00:00 app[web.1]: },
 2022-09-22T11:34:22.871593+00:00 app[web.1]: subscribed: true
 2022-09-22T11:34:22.871593+00:00 app[web.1]: }
+
+
+
+received from viber something {
+  event: 'delivered',
+  timestamp: 1663849099520,
+  chat_hostname: 'SN-CALLBACK-04_',
+  message_token: 5753709833692266000,
+  user_id: 'btwTg/rA4ytv5OxvoaTJwQ=='
+}
+received from viber something {
+  event: 'seen',
+  timestamp: 1663849100409,
+  chat_hostname: 'SN-CALLBACK-02_',
+  message_token: 5753709833692266000,
+  user_id: 'btwTg/rA4ytv5OxvoaTJwQ=='
+}
