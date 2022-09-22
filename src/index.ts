@@ -23,8 +23,8 @@ if (app.get("env") === "development") {
 } else {
   app.post(EApis.webhook, (req, res) => {
     const body = req.body;
-    // when setup set to false
-    const SEND_TO_PROXY = false;
+    //Warning!!! when setup set to false
+    const SEND_TO_PROXY = true;
     if (SEND_TO_PROXY) {
       try {
         axios.post(
