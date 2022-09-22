@@ -13,6 +13,7 @@ export enum EEventTypes {
   failed = "failed",
   subscribed = "subscribed",
   unsubscribed = "unsubscribed",
+  message = "message",
   conversation_started = "conversation_started",
 }
 
@@ -29,47 +30,71 @@ export enum EMessageType {
   url = "url",
 }
 
+export interface IMessage {
+  event: EEventTypes;
+  timestamp: number;
+  chat_hostname: string;
+  message_token: number;
+  sender: {
+    id: string;
+    name: string;
+    avatar: string;
+    language: string;
+    country: string;
+    api_version: number;
+  };
+  message: { text: string; type: string };
+  silent: boolean;
+}
+
+export interface IConversationStartedMessage {
+  event: EEventTypes;
+  timestamp: number;
+  chat_hostname: string;
+  message_token: number;
+  type: string;
+  user: {
+    id: string;
+    name: string;
+    avatar: string;
+    language: string;
+    country: string;
+    api_version: number;
+  };
+  subscribed: boolean;
+}
+
 export async function sendTextMessageToViber(message: {
   receiver: string;
   text: string;
+  sender?: {
+    name: string;
+    avatar: string;
+  };
 }): Promise<{ data?: any; error?: any }> {
-  try {
-    const data = await axios.post(
-      "https://chatapi.viber.com/pa/send_message",
-
-      {
-        ...message,
-        min_api_version: 7,
-        type: EMessageType.text,
-       
-		
-		  keyboard: {
-          Type: "keyboard",
-          DefaultHeight: false,
-          Buttons: [
-            {
-              ActionType: "reply",
-              ActionBody: "reply to me",
-              Text: "Так давай",
-              TextSize: "regular",
-            },
-            {
-              ActionType: "reply",
-              ActionBody: "reply to me",
-              Text: "Ні я тебе більше не хочу Піди купи капусту краще",
-              TextSize: "regular",
-            },
-          ],
-		  },
-		  
-
-      },
-      getAxiosConfig()
-    );
-    return { data };
-  } catch (error) {
-    return { error };
-  }
+  return await sendMessage({
+    ...message,
+    min_api_version: 7,
+    type: EMessageType.text,
+    keyboard: {
+      Type: "keyboard",
+      DefaultHeight: false,
+      Buttons: [
+        {
+          ActionType: "reply",
+          ActionBody: "reply to me 1",
+          Text: "Так давай",
+          TextSize: "regular",
+        },
+        {
+          ActionType: "reply",
+          ActionBody: "reply to me 2",
+          Text: "Ні я тебе більше не хочу Піди купи капусту краще",
+          TextSize: "regular",
+        },
+      ],
+    },
+  });
 }
 
 export async function sendPictureMessageToViber(message: {
@@ -78,17 +103,29 @@ export async function sendPictureMessageToViber(message: {
   media: string;
   thumbnail?: string;
 }): Promise<{ data?: any; error?: any }> {
+  return await sendMessage({
+    ...message,
+    type: EMessageType.picture,
+    sender: {
+      name: "John McClane",
+      avatar: "http://avatar.example.com",
+    },
+  });
+}
+
+export async function sendMessage(
+  message: any
+): Promise<{ data?: any; error?: any }> {
   try {
+    console.log("send = ", message);
     const data = await axios.post(
       "https://chatapi.viber.com/pa/send_message",
-      {
-        ...message,
-        type: EMessageType.picture,
-      },
+      message,
       getAxiosConfig()
     );
     return { data };
   } catch (error) {
+    console.log("error", error);
     return { error };
   }
 }
