@@ -7,3 +7,5 @@ chmod +x ./ngrok
 
 sudo nano /etc/nginx/sites-enabled/default
 sudo systemctl restart nginx
+
+https://developers.google.com/sheets/api/quickstart/js
