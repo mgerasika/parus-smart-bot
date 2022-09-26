@@ -31,7 +31,7 @@ app.post(EApis.webhook, async (req, res) => {
   const DEBUG_VERSION = true;
   if (DEBUG_VERSION) {
     try {
-      axios.post(`${ENV.DEBUG_VIBER_SERVER_URL}`, body);
+      await axios.post(`${ENV.DEBUG_VIBER_SERVER_URL}`, body);
       res.status(200).send();
     } catch (error) {
       console.log("error = ", error);
