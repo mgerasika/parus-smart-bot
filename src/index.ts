@@ -35,12 +35,15 @@ app.post(EApis.webhook, async (req, res) => {
         .post(`${ENV.DEBUG_VIBER_SERVER_URL}`, body)
         .then(() => {
           console.log("webhook-result success");
-          res.status(200).send();
+          //   res.status(200).send();
         })
         .catch((error) => {
           console.log("webhook-result error", error);
-          res.status(200).send();
+          //   res.status(200).send();
         });
+
+      //todo example
+      res.status(200).send();
     } catch (error) {
       console.log("error = ", error);
       res.status(400).send(error);
