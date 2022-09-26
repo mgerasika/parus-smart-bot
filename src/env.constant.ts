@@ -4,4 +4,4 @@ export const ENV = {
   DEBUG_VIBER_SERVER_URL: "http://178.210.131.101:1337/api/viber/web_hook",
   VIBER_PROXY_TOKEN: process.env.VIBER_PROXY_TOKEN,
 };
-console.log("ENV=", ENV);
+

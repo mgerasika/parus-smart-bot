@@ -26,11 +26,12 @@ enum EApis {
 app.post(EApis.webhook, async (req, res) => {
   const body = req.body;
 
+  console.log("webhook body", body);
   //Warning!!! when setup set to false
   const DEBUG_VERSION = true;
   if (DEBUG_VERSION) {
     try {
-      axios.post(`${ENV.DEBUG_VIBER_SERVER_URL}`, body, getAxiosConfig());
+      axios.post(`${ENV.DEBUG_VIBER_SERVER_URL}`, body);
       res.status(200).send();
     } catch (error) {
       console.log("error = ", error);
@@ -93,7 +94,6 @@ app.listen(PORT, () => {
 });
 
 function getAxiosConfig(): AxiosRequestConfig {
-  console.log("token", ENV.VIBER_PROXY_TOKEN);
   return {
     headers: {
       "X-Viber-Auth-Token": ENV.VIBER_PROXY_TOKEN as any,
