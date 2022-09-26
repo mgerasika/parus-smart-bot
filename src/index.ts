@@ -26,12 +26,13 @@ enum EApis {
 app.post(EApis.webhook, async (req, res) => {
   const body = req.body;
 
-  console.log("webhook body", body);
+  console.log("webhook-body", body);
   //Warning!!! when setup set to false
   const DEBUG_VERSION = true;
   if (DEBUG_VERSION) {
     try {
-      await axios.post(`${ENV.DEBUG_VIBER_SERVER_URL}`, body);
+      const res = await axios.post(`${ENV.DEBUG_VIBER_SERVER_URL}`, body);
+      console.log("proxy result", res);
     } catch (error) {
       console.log("error = ", error);
       res.status(400).send(error);
