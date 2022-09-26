@@ -31,8 +31,16 @@ app.post(EApis.webhook, async (req, res) => {
   const DEBUG_VERSION = true;
   if (DEBUG_VERSION) {
     try {
-      const res = await axios.post(`${ENV.DEBUG_VIBER_SERVER_URL}`, body);
-      console.log("proxy result", res);
+      axios
+        .post(`${ENV.DEBUG_VIBER_SERVER_URL}`, body)
+        .then(() => {
+          console.log("webhook-result success");
+          res.status(200).send();
+        })
+        .catch((error) => {
+          console.log("webhook-result error", error);
+          res.status(400).send(error);
+        });
     } catch (error) {
       console.log("error = ", error);
       res.status(400).send(error);
