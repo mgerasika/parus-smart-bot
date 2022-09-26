@@ -93,6 +93,7 @@ app.listen(PORT, () => {
 });
 
 function getAxiosConfig(): AxiosRequestConfig {
+  console.log("token", ENV.VIBER_PROXY_TOKEN);
   return {
     headers: {
       "X-Viber-Auth-Token": ENV.VIBER_PROXY_TOKEN as any,
