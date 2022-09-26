@@ -39,7 +39,7 @@ app.post(EApis.webhook, async (req, res) => {
         })
         .catch((error) => {
           console.log("webhook-result error", error);
-          res.status(400).send(error);
+          res.status(200).send();
         });
     } catch (error) {
       console.log("error = ", error);
