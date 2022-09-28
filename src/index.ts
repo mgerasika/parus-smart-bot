@@ -32,7 +32,7 @@ app.post(EApis.webhook, async (req, res) => {
   if (DEBUG_VERSION) {
     try {
       axios
-        .post(`${ENV.DEBUG_VIBER_SERVER_URL}`, body)
+        .post(`${ENV.PROXY_WEB_HOOK}`, body)
         .then(() => {
           console.log("webhook-result success");
           //   res.status(200).send();
@@ -58,7 +58,7 @@ app.get(EApis.setup, async (req, res) => {
     const data = await axios.post(
       "https://chatapi.viber.com/pa/set_webhook",
       {
-        url: `${ENV.VIBER_PROXY_SERVER_URL}webhook`,
+        url: `${ENV.VIBER_WEB_HOOK}`,
         event_types: [
           //   "delivered",
           //   "seen",
