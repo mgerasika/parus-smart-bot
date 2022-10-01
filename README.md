@@ -9,3 +9,7 @@ sudo nano /etc/nginx/sites-enabled/default
 sudo systemctl restart nginx
 
 https://developers.google.com/sheets/api/quickstart/js
+
+//firebase
+https://www.youtube.com/watch?v=LOeioOKUKI8
+firebase serve --only functions,hosting
