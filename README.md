@@ -13,3 +13,9 @@ https://developers.google.com/sheets/api/quickstart/js
 //firebase
 https://www.youtube.com/watch?v=LOeioOKUKI8
 firebase serve --only functions,hosting
+
+//ssl
+https://www.youtube.com/watch?v=5wzs-pcDQ3k
+https://www.digwebinterface.com/?hostnames=_acme-challenge.parus-smart.site.&type=TXT&ns=resolver&useresolver=8.8.4.4&nameservers=
+sudo apt-get install certbot
+sudo certbot certonly -d parus-smart.site -d *.parus-smart.site --manual --preferred-challenges dns

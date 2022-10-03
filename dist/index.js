@@ -14,10 +14,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const express_1 = __importDefault(require("express"));
+const fs = require('fs');
+var http = require('http');
+var https = require('https');
 const app = (0, express_1.default)();
 const body_parser_1 = __importDefault(require("body-parser"));
 const env_constant_1 = require("./env.constant");
 require("module-alias/register");
+// var privateKey  = fs.readFileSync('cert/privkey.pem', 'utf8');
+// var certificate = fs.readFileSync('cert/fullchain.pem', 'utf8');
+var privateKey = fs.readFileSync('cert/localhost.key', 'utf8');
+var certificate = fs.readFileSync('cert/localhost.crt', 'utf8');
+var credentials = { key: privateKey, cert: certificate };
 app.use(body_parser_1.default.json()); // to support JSON-encoded bodies
 app.use(body_parser_1.default.urlencoded({
     // to support URL-encoded bodies
@@ -26,8 +34,8 @@ app.use(body_parser_1.default.urlencoded({
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded());
 // app.use(express.multipart());
-app.get("/", (req, res) => {
-    res.send(Object.values(EApis).join(", "));
+app.get("/webhook", (req, res) => {
+    res.send(Object.values(EApis).join(", ") + " viberHook = " + env_constant_1.ENV.VIBER_WEB_HOOK);
 });
 var EApis;
 (function (EApis) {
@@ -37,11 +45,22 @@ var EApis;
 })(EApis || (EApis = {}));
 app.post(EApis.webhook, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const body = req.body;
+    console.log("webhook-body", body);
     //Warning!!! when setup set to false
     const DEBUG_VERSION = true;
     if (DEBUG_VERSION) {
         try {
-            axios_1.default.post(`${env_constant_1.ENV.DEBUG_VIBER_SERVER_URL}`, body, getAxiosConfig());
+            axios_1.default
+                .post(`${env_constant_1.ENV.PROXY_WEB_HOOK}`, body)
+                .then(() => {
+                console.log("webhook-result success");
+                //   res.status(200).send();
+            })
+                .catch((error) => {
+                console.log("webhook-result error", error);
+                //   res.status(200).send();
+            });
+            //todo example
             res.status(200).send();
         }
         catch (error) {
@@ -56,7 +75,7 @@ app.post(EApis.webhook, (req, res) => __awaiter(void 0, void 0, void 0, function
 app.get(EApis.setup, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield axios_1.default.post("https://chatapi.viber.com/pa/set_webhook", {
-            url: `${env_constant_1.ENV.VIBER_PROXY_SERVER_URL}webhook`,
+            url: `${env_constant_1.ENV.VIBER_WEB_HOOK}`,
             event_types: [
                 //   "delivered",
                 //   "seen",
@@ -91,9 +110,15 @@ app.get(EApis.unSetup, (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 }));
 const PORT = process.env.PORT || 3005;
+const PORTS = process.env.PORTS || 3006;
 console.log(app.get("env"));
-app.listen(PORT, () => {
-    console.log(`Example app listening on port ${PORT}`);
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+httpServer.listen(PORT, () => {
+    console.log(`Example htpp app listening on port ${PORT}`);
+});
+httpsServer.listen(PORTS, () => {
+    console.log(`Example https app listening on port ${PORTS}`);
 });
 function getAxiosConfig() {
     return {

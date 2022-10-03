@@ -26,7 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded());
 // app.use(express.multipart());
 app.get(EApis.webhook, (req, res) => {
-	res.send(Object.values(EApis).join(", "));
+	res.send(Object.values(EApis).join(", ") + " viberHook = " + ENV.VIBER_WEB_HOOK);
 });
 
 

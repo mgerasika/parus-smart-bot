@@ -1,9 +1,21 @@
 import axios, { AxiosRequestConfig } from "axios";
 import express from "express";
+const fs = require('fs');
+var http = require('http');
+var https = require('https');
 const app = express();
 import bodyParser from "body-parser";
 import { ENV } from "./env.constant";
 import "module-alias/register";
+
+// var privateKey  = fs.readFileSync('cert/privkey.pem', 'utf8');
+// var certificate = fs.readFileSync('cert/fullchain.pem', 'utf8');
+
+var privateKey  = fs.readFileSync('cert/localhost.key', 'utf8');
+var certificate = fs.readFileSync('cert/localhost.crt', 'utf8');
+
+var credentials = { key: privateKey, cert: certificate };
+
 app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.use(
   bodyParser.urlencoded({
@@ -14,8 +26,10 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded());
 // app.use(express.multipart());
-app.get("/", (req, res) => {
-  res.send(Object.values(EApis).join(", "));
+app.get("/webhook", (req, res) => {
+  res.send(
+    Object.values(EApis).join(", ") + " viberHook = " + ENV.VIBER_WEB_HOOK
+  );
 });
 
 enum EApis {
@@ -99,10 +113,20 @@ app.get(EApis.unSetup, async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3005;
+const PORTS = process.env.PORTS || 3006;
 console.log(app.get("env"));
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}`);
+
+
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+
+httpServer.listen(PORT, () => {
+  console.log(`Example htpp app listening on port ${PORT}`);
 });
+
+httpsServer.listen(PORTS, () => {
+	console.log(`Example https app listening on port ${PORTS}`);
+  });
 
 function getAxiosConfig(): AxiosRequestConfig {
   return {
