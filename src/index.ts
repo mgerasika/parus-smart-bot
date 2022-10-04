@@ -1,8 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import express from "express";
-const fs = require('fs');
-var http = require('http');
-var https = require('https');
+const fs = require("fs");
+var http = require("http");
 const app = express();
 import bodyParser from "body-parser";
 import { ENV } from "./env.constant";
@@ -10,11 +9,6 @@ import "module-alias/register";
 
 // var privateKey  = fs.readFileSync('cert/privkey.pem', 'utf8');
 // var certificate = fs.readFileSync('cert/fullchain.pem', 'utf8');
-
-var privateKey  = fs.readFileSync('cert/localhost.key', 'utf8');
-var certificate = fs.readFileSync('cert/localhost.crt', 'utf8');
-
-var credentials = { key: privateKey, cert: certificate };
 
 app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.use(
@@ -67,6 +61,10 @@ app.post(EApis.webhook, async (req, res) => {
   }
 });
 
+app.get("/", async (req, res) => {
+  res.status(200).send("hello world");
+});
+
 app.get(EApis.setup, async (req, res) => {
   try {
     const data = await axios.post(
@@ -112,21 +110,14 @@ app.get(EApis.unSetup, async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3005;
-const PORTS = process.env.PORTS || 3006;
+const PORT = process.env.PORT || 3000;
 console.log(app.get("env"));
 
-
 var httpServer = http.createServer(app);
-var httpsServer = https.createServer(credentials, app);
 
 httpServer.listen(PORT, () => {
   console.log(`Example htpp app listening on port ${PORT}`);
 });
-
-httpsServer.listen(PORTS, () => {
-	console.log(`Example https app listening on port ${PORTS}`);
-  });
 
 function getAxiosConfig(): AxiosRequestConfig {
   return {

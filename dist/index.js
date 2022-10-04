@@ -14,18 +14,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const express_1 = __importDefault(require("express"));
-const fs = require('fs');
-var http = require('http');
-var https = require('https');
+const fs = require("fs");
+var http = require("http");
 const app = (0, express_1.default)();
 const body_parser_1 = __importDefault(require("body-parser"));
 const env_constant_1 = require("./env.constant");
 require("module-alias/register");
 // var privateKey  = fs.readFileSync('cert/privkey.pem', 'utf8');
 // var certificate = fs.readFileSync('cert/fullchain.pem', 'utf8');
-var privateKey = fs.readFileSync('cert/localhost.key', 'utf8');
-var certificate = fs.readFileSync('cert/localhost.crt', 'utf8');
-var credentials = { key: privateKey, cert: certificate };
 app.use(body_parser_1.default.json()); // to support JSON-encoded bodies
 app.use(body_parser_1.default.urlencoded({
     // to support URL-encoded bodies
@@ -72,6 +68,9 @@ app.post(EApis.webhook, (req, res) => __awaiter(void 0, void 0, void 0, function
         res.status(200).send();
     }
 }));
+app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.status(200).send("hello world");
+}));
 app.get(EApis.setup, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield axios_1.default.post("https://chatapi.viber.com/pa/set_webhook", {
@@ -109,16 +108,11 @@ app.get(EApis.unSetup, (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(400).send(error);
     }
 }));
-const PORT = process.env.PORT || 3005;
-const PORTS = process.env.PORTS || 3006;
+const PORT = process.env.PORT || 3000;
 console.log(app.get("env"));
 var httpServer = http.createServer(app);
-var httpsServer = https.createServer(credentials, app);
 httpServer.listen(PORT, () => {
     console.log(`Example htpp app listening on port ${PORT}`);
-});
-httpsServer.listen(PORTS, () => {
-    console.log(`Example https app listening on port ${PORTS}`);
 });
 function getAxiosConfig() {
     return {
