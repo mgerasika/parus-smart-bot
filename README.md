@@ -18,4 +18,10 @@ firebase serve --only functions,hosting
 https://www.youtube.com/watch?v=5wzs-pcDQ3k
 https://www.digwebinterface.com/?hostnames=_acme-challenge.parus-smart.site.&type=TXT&ns=resolver&useresolver=8.8.4.4&nameservers=
 sudo apt-get install certbot
-sudo certbot certonly -d parus-smart.site -d *.parus-smart.site --manual --preferred-challenges dns
+sudo certbot certonly -d parus-smart.site -d \*.parus-smart.site --manual --preferred-challenges dns
+
+https://www.nginx.com/blog/using-free-ssltls-certificates-from-lets-encrypt-with-nginx/
+
+sudo certbot --nginx -d parus-smart.site -d \*.parus-smart.site
+
+https://www.digwebinterface.com/
